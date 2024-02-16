@@ -1,15 +1,15 @@
 #[macro_use] extern crate rocket;
 
-mod server;
-mod routes;
+use rocket::tokio::sync::broadcast::channel;
+
+pub mod routes;
+pub mod server;
+
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![routes::chat_server])
-        .attach(AdHoc::on_ignite("Chat Server", |rocket| async {
-            let chat_server = server::ChatServer { clients: Vec::new() };
-            rocket.manage(chat_server)
-        }))
+        .manage(channel::<server::AppState>(1024).0)
+        .mount("/", routes![routes::subscribe])
 
 }
