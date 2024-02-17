@@ -43,7 +43,9 @@ pub async fn publish(sessions: &State<server::AppState>, message: Json<server::M
         // save to the database and send the message to the channel
         // if the channel doesn't have any subscribers, check the type of the message
         // if the message is a SEND save it to the database...
-        if let Err(_) = queue.send(message) {
+        if message.message_type == server::MessageType::QUIT && queue.receiver_count() <= 1{
+            sessions.remove(&room_id);
+        } else if let Err(_) = queue.send(message) {
             sessions.remove(&room_id);
         }
     }
