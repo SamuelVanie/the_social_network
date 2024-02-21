@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body id="body">
+    <h1 id="header">Welcome from 0n1g1r1!</h1>
+    <div>
+      <input id="input-name" placeholder="What's your name ?"></input>
+      <button id="submit" type="button">Confirm name</button>
+    </div>
+    
+    <script>
+      // access the pre-bundled global API functions
+      const { invoke } = window.__TAURI__.tauri
+
+      const result = document.getElementById("input-name")
+      const button = document.getElementById("submit")
+      const text = document.getElementById("header")
+
+      button.addEventListener('click', function () {invoke('say_hello', { name: result.value })
+        .then((response) => {
+          text.innerText = response
+        })
+      })
+    </script>
+    <div>
+      <button id="new-icon" type="button">Add icon</button>
+    </div>
+    <script src="ts/GenIcon.js"></script>
+  </body>
+</html>
