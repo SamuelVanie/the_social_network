@@ -4,6 +4,7 @@
 use std::fs::read;
 
 
+
 #[tauri::command]
 fn say_hello(name: &str) -> String {
   format!("Hello {} and welcome to 0n1g1r1", name)
@@ -19,9 +20,24 @@ fn icon() -> Vec<u8> {
   local_img
 }
 
+#[derive(serde::Serialize)]
+struct Message {
+  message: String,
+  author: String,
+}
+
+#[tauri::command]
+async fn get_message() -> Result<Message, String> {
+  let m: Message = Message {
+    message: String::from("Bonjour."),
+    author: String::from("origaniels")
+  };
+  Ok(m)
+}
+
 fn main() {
   tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![say_hello, icon])
+    .invoke_handler(tauri::generate_handler![say_hello, icon, get_message])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
