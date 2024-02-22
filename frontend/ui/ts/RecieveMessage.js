@@ -11,5 +11,4 @@ async function display_message() {
         messageBloc.innerText = author + ': ' + content;
         chat.appendChild(messageBloc);
     })
-    
 }

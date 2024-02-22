@@ -26,8 +26,8 @@ struct Message {
   author: String,
 }
 
-#[tauri::command]
-async fn get_message() -> Result<Message, String> {
+#[tauri::command(async)]
+fn get_message() -> Result<Message, String> {
   let m: Message = Message {
     message: String::from("Bonjour."),
     author: String::from("origaniels")
