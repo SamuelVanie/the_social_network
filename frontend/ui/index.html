@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+    <script>
+      const { invoke } = window.__TAURI__.tauri
+    </script>
+  </head>
+  <body id="body">
+    <div id="server-nav">
+      <button id="submit" type="button">Refresh msg</button>
+      <script src="ts/RecieveMessage.js"></script>
+    </div>
+    <div id="left-pannel">
+      <div id="control-pannel">
+        <img src="blanchard.png">
+      </div>
+      <div id="channel-list">
+        <div class="channel"></div>
+      </div>
+    </div>
+    <div id="convo">
+      <div id="convo-chat">
+        <h1 id="header">Welcome to 0n1g1r1!</h1>
+      </div>
+      <form id="message-edit">
+        <input id="input-message" type="text" placeholder="Type in your message"/>
+        <script src="ts/PostMessage.js"></script>
+      </form>
+    </div>
+
+    
+
+  </body>
+</html>

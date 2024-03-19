@@ -1,5 +1,6 @@
 use eventsource::reqwest::Client;
 use tokio_util::sync::CancellationToken;
+use futures::stream::Stream;
 
 async fn connect(channel_id: i32, token: CancellationToken) {
     let url = reqwest::Url::parse(format!("http://127.0.0.1:8000/subscribe/{}", channel_id).as_str()).unwrap();

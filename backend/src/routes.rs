@@ -16,6 +16,8 @@ pub async fn subscribe(
     mut end: Shutdown,
 ) -> EventStream![] {
     let mut sessions = sessions.clients.lock().await;
+    // Does the sessions exists ?
+    // If not we create it and store in the state (meaning new conversation)
     let new_cli = if let Some(existing_cli) = sessions.get(&channel_id) {
         existing_cli.clone()
     } else {
@@ -26,9 +28,12 @@ pub async fn subscribe(
 
     let queue: &Sender<server::Message> = &new_cli;
 
+    // Add the client to the broadcast channel so that he can receive messages
     let mut client = queue.subscribe();
 
     EventStream! {
+        // Messages received down the channel are sent to the clients that
+        // they've subscribed to
         loop {
             let msg = select! {
                 msg  = client.recv() => match msg {

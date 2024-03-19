@@ -7,7 +7,6 @@ use rocket::{tokio::sync::Mutex, Build, Rocket};
 pub mod routes;
 pub mod server;
 
-
 #[launch]
 pub fn rocket() -> Rocket<Build> {
     rocket::build()
