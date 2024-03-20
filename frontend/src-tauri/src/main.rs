@@ -54,11 +54,11 @@ async fn susbcribe_to_channel(
     app: AppHandle,
     state: State<'_, ChannelState>,
 ) -> Result<OperationResult, String> {
-    let (tx, mut rx) = tokio::sync::mpsc::channel::<String>(32);
 
+    log::trace!("Subscribe function called");
     let mut tokens = state.state.lock().await;
 
-    let token = tokens.get(&channel_id);
+    let token: Option<&CancellationToken> = tokens.get(&channel_id);
 
     if token.is_some() {
         log::warn!(
@@ -74,7 +74,8 @@ async fn susbcribe_to_channel(
         });
     }
 
-    let token = tokens.insert(channel_id, CancellationToken::new()).unwrap();
+    tokens.insert(channel_id, CancellationToken::new());
+    let token = tokens.get(&channel_id);
 
     let url =
         reqwest::Url::parse(format!("http://127.0.0.1:8000/subscribe/{}", channel_id).as_str())
@@ -82,23 +83,14 @@ async fn susbcribe_to_channel(
 
     let client = Client::new(url);
 
-    tokio::spawn(async move {
-        // send the message directly to the frontend if we receive one
-        while let Some(message) = rx.recv().await {
-            log::trace!("{}", format!("Sending message to frontend: {:?}", message));
-            app.emit_all("new_message", message).unwrap();
-        }
-    });
-
     for event in client {
-        if token.is_cancelled() {
+        if token.expect("Token is invalid").is_cancelled() {
             break;
         }
         let message = event.unwrap().data;
-        if tx.send(message.clone()).await.is_err() {
-            log::warn!("Frontend will not receive this message {}", message);
-        }
+        app.emit_all("new_message", message).unwrap();
     }
+
     return Ok(OperationResult {
         content: format!(
             "Stopped listening for messages from channel: {}",
@@ -117,9 +109,11 @@ fn main() {
     let env = Env::default()
         .filter_or("LOG_LEVEL", "trace")
         .write_style_or("LOG_STYLE", "always");
+
     env_logger::init_from_env(env);
 
     tauri::Builder::default()
+        .manage(ChannelState { state: Mutex::new(HashMap::new()) })
         .invoke_handler(tauri::generate_handler![
             say_hello,
             susbcribe_to_channel,

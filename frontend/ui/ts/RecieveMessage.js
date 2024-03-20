@@ -1,21 +1,21 @@
 const button = document.getElementById("submit");
 var chat;
 
-button.addEventListener("click", (e) => display_message(e), false);
-
 async function display_message(e) {
   e.preventDefault();
-  invoke("susbcribe_to_channel", { channel_id: 1 }).then((response) => {
-    console.log(response.content);
-  });
+  console.log("I call the subscribe function");
+  invoke("susbcribe_to_channel", { channelId: 1 });
 }
+
+button.addEventListener("click", (e) => display_message(e), false);
+
+listen("new_message", (message) => {
+  console.log("I received a message");
+  console.log(message);
+});
 
 function onReady() {
   chat = document.getElementById("convo-chat");
 }
 
 window.addEventListener("load", () => onReady());
-
-window.addEventListener("new_message", (event) => {
-  console.log(event.payload);
-});
