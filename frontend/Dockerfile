@@ -41,4 +41,4 @@ RUN npm install @tauri-apps/api@latest
 WORKDIR /app/src-tauri
 
 # Run the application for development purpose
-CMD [cargo", "tauri", "dev"]
+CMD ["cargo", "tauri", "dev"]
