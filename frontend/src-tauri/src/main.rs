@@ -1,9 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tokio::sync::Mutex;
-use env_logger::Env;
-use std::collections::HashMap;
 
 mod channel;
 
@@ -13,11 +10,8 @@ fn say_hello(name: &str) -> String {
 }
 
 fn main() {
-    let env = Env::default()
-        .filter_or("LOG_LEVEL", "trace")
-        .write_style_or("LOG_STYLE", "always");
 
-    env_logger::init_from_env(env);
+    simple_logger::init().unwrap();
 
     tauri::Builder::default()
         .manage(channel::ChannelState {

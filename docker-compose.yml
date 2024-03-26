@@ -23,18 +23,13 @@ services:
       - "8000:8000"
     network_mode: "host"
 
-  # frontend:
-  #   container_name: frontend
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: frontend.Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - DISPLAY=${DISPLAY}
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #   network_mode: "host"
-      
-  # volumes:
-  #   db-data: {}
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    network_mode: "host"
