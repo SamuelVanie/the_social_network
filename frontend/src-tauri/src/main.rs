@@ -4,6 +4,9 @@
 
 mod channel;
 
+use tokio::sync::Mutex;
+use std::collections::HashMap;
+
 #[tauri::command]
 fn say_hello(name: &str) -> String {
     format!("Hello {} and welcome to 0n1g1r1", name)

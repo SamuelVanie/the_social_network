@@ -13,28 +13,32 @@ RUN apt-get update && apt-get install -y \
     libsoup2.4-dev \
     libwebkit2gtk-4.0-dev
 
-# Install Rust 1.70
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.70.0
-ENV PATH="/root/.cargo/bin:${PATH}"
-
 # Install Node.js 21.6.2
 RUN curl -sL https://deb.nodesource.com/setup_21.x | bash -
 RUN apt-get install -y nodejs
+
+
+# Install Rust 1.70
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.74.0
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 WORKDIR /app
 
 # Copy the source code from parent directory to the working directory
 COPY . .
 
+RUN cargo install tauri-cli
+
 # Install tauri dependencies
-RUN npm install @tauri-apps/cli@latest @tauri-apps/api@latest
-RUN npm install tauri
+RUN npm install @tauri-apps/api@latest
 
 # Build the application for release purpose
-RUN cargo build --release --manifest-path=./src-tauri/Cargo.toml --no-default-features
+#RUN cargo build --release --manifest-path=./src-tauri/Cargo.toml --no-default-features
 
 # Run the application for release purpose
 # CMD ["./src-tauri/target/release/app"]
 
+WORKDIR /app/src-tauri
+
 # Run the application for development purpose
-CMD ["cargo", "tauri", "dev"]
+CMD [cargo", "tauri", "dev"]
