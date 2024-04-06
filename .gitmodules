@@ -1,0 +1,6 @@
+[submodule "on1giri_client"]
+	path = on1giri_client
+	url = git@github.com:54giri-studios/on1giri_client
+[submodule "on1giri_server"]
+	path = on1giri_server
+	url = git@github.com:54giri-studios/on1giri_server
