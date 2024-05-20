@@ -34,7 +34,7 @@ services:
     environment:
         # Replace $IP with your ip address on mac
         # Replace it with $DISPLAY on linux
-      - DISPLAY=$DISPLAY
+      - DISPLAY=$DISPLAY:0
     volumes:
       - $HOME/projects/rust/the_social_network/on1giri_client/frontend:/app
     network_mode: "host"
